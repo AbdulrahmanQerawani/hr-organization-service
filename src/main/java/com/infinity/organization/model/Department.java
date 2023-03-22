@@ -1,6 +1,7 @@
 package com.infinity.organization.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.Transient;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,16 +20,5 @@ public class Department {
 
     private Long id;
     private String name;
-    private List<Employee> employees = new ArrayList<>();
-
-
-    public Department(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Department [id=" + id + ", name=" + name + "]";
-    }
 
 }

@@ -5,3 +5,11 @@ spring:
     active: dev
   config:
     import: configserver:http://configserver:8071
+
+logging:
+  level:
+    com.netflix: WARN
+    org.springframework.web: WARN
+    com.infinity: DEBUG
+    org.apache.kafka: INFO
+logging.pattern.level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

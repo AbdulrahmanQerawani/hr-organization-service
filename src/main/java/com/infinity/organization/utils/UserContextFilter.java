@@ -5,6 +5,7 @@ import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.Context;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
@@ -14,14 +15,12 @@ import java.io.IOException;
 import static io.opentelemetry.context.Context.current;
 
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class UserContextFilter implements Filter {
     private static final Logger LOGGER = log;
     private final Tracer tracer;
 
-    public UserContextFilter(Tracer tracer) {
-        this.tracer = tracer;
-    }
 
     public String getOTelTraceId() {
         // Get the current span from the open telemetry context

@@ -1,5 +1,7 @@
 package com.infinity.organization.controller;
 
+import com.infinity.organization.client.DepartmentFeignClient;
+import com.infinity.organization.client.EmployeeFeignClient;
 import com.infinity.organization.client.GatewayClientService;
 import com.infinity.organization.model.Department;
 import com.infinity.organization.model.Employee;
@@ -20,8 +22,8 @@ import java.util.List;
 public class OrganizationController {
     private static final Logger LOGGER = LoggerFactory.getLogger(OrganizationController.class);
     private final OrganizationService organizationService;
-    //    private final DepartmentFeignClient departmentFeignClient;
-//    private final EmployeeFeignClient employeeFeignClient;
+    private DepartmentFeignClient departmentFeignClient;
+    private EmployeeFeignClient employeeFeignClient;
     private final GatewayClientService clientService;
 
     @RolesAllowed({"ADMIN", "USER"})
@@ -60,24 +62,17 @@ public class OrganizationController {
             try {
                 // get list of departments in organization
                 List<Department> departmentsList = clientService.findAllDepartments(organizationId);
-
-                // get list of employees for each department and add each list to its department
-                departmentsList.forEach(department -> {
-                    List<Employee> employeeList = clientService.findAllEmployees(organizationId)
-                            .stream()
-                            .filter(employee -> employee.getDepartmentId().equals(department)).toList();
-                    department.setEmployees(employeeList);
-                    organization.setEmployees(employeeList);
-                });
-
+                List<Employee> employeeList = clientService.findAllEmployees(organizationId);
                 // add departmentsList to organization
                 organization.setDepartments(departmentsList);
-                ResponseEntity.ok(organization);
+                // get list of employees for each department and add each list to its department
+                organization.setEmployees(employeeList);
+                return ResponseEntity.ok(organization);
+
             } catch (RuntimeException runtimeException) {
                 return ResponseEntity.internalServerError().build();
             }
         }
-
         return ResponseEntity.notFound().build();
     }
 
